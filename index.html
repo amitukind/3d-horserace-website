@@ -47,12 +47,32 @@
     scene.add( light );
 
     var animate = function () {
+
+
+
         requestAnimationFrame( animate );
         renderer.render(scene, camera);
+
+        for (i=0;i<=num;i++){
+            var o = objects[i];
+            o.rotation.y+=.01;
+            if( i % 2 == 0) {
+                o.radians+=.005; o.radians2+=.005;
+            } else {
+                o.radians-=.005; o.radians2-=.005;
+            }
+            o.position.x = (Math.cos(o.radians) *
+                o.distance);
+            o.position.z = (Math.sin(o.radians) *
+                o.distance);
+            o.position.y = (Math.sin(o.radians2) *
+                o.distance*.5);
+        }
+
     };
 
     // start animation loop
-    animate();
+
 
 
     // load a ground texture
@@ -76,8 +96,35 @@
 
 
 
+    for (i=0;i<=num;i++){
+        // create new mesh
+        var geometry = new THREE.SphereBufferGeometry( .1,6,6  );
+        var material = new THREE.MeshPhysicalMaterial( {  metalness:1.0 } ) ;
+        var particle = new THREE.Mesh( geometry, material );
+        // set random position
+        particle.position.set(Math.random()*100.0 -
+            50.0,0.0 ,Math.random()* - 10.0 );
+// calc distnace as constant and assignto object
+
+        var a = new THREE.Vector3( 0, 0, 0 );
+        var b = particle.position;
+        var d = a.distanceTo( b );
+        particle.distance = d;
+        // define 2 random but constant angles in radians
+        particle.radians = Math.random()*360 * Math.
+            PI/180; // initial angle
+        particle.radians2 = Math.random()*360 * Math.
+            PI/180; // initial angle
+        // add object to scene
+        scene.add( particle );
+// add to collection
+        objects.push( particle );
+    }
 
 
+
+
+    animate();
 </script>
 <h1>3D Horse Racing</h1>
 </body>
